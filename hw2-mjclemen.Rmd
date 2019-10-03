@@ -44,6 +44,8 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of polygons
 ```{r}
+crime.method <- colorBin("Dark2", domain = crimes$METHOD)
+
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
@@ -52,7 +54,9 @@ leaflet(data = crimes) %>%
               label = "Crimes throughout DC",
               highlight = highlightOptions(weight = 3,
                                            color = "blue",
-                                           bringToFront = TRUE))
+                                           bringToFront = TRUE)) %>%
+  addLegend(pal = crime.method, values = ~crimes$METHOD, title = "Color by Weapon:",
+  position = "bottomright")
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
 ```{r}
@@ -72,6 +76,10 @@ leaflet(data = crimes) %>%
   addLegend(position = 'topright',
             pal = type.of.crime.colors,
             values = crimes$SHIFT,
-            title = 'Weapon')
+            title = 'Time of Day')
+```
+# Map with functioning layersControl()
+```{r}
+
 ```
 
