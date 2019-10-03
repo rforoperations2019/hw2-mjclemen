@@ -50,6 +50,21 @@ leaflet(data = crimes[1:100,]) %>%
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
 ```{r}
+# Custom Palette
+type.of.crime.colors <- colorFactor(
+  palette = c('red', 'blue', 'green'),
+  levels = c('GUN', 'KNIFE', 'OTHERS'))
 
+leaflet(data = crimes[1:100,]) %>%
+  addProviderTiles(providers$OpenStreetMap) %>%
+  addCircleMarkers(data = crimes[1:100,],
+                   lng = ~LONGITUDE,
+                   lat = ~LATITUDE,
+                   radius = 2,
+                   color = ~type.of.crime.colors(METHOD)) %>%
+  addLegend(position = 'topright',
+            pal = type.of.crime.colors,
+            values = crimes[1:100,]$METHOD,
+            title = "Weapon")
 ```
 
