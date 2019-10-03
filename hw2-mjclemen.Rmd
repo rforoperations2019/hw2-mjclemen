@@ -23,6 +23,7 @@ require(tools)
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 crimes <- crimes[1:200,]
 crimes$METHOD <- str_to_title(crimes$METHOD)
+crimes$SHIFT <- str_to_title(crimes$SHIFT)
 ```
 
 # Map with a layer of points
@@ -58,8 +59,8 @@ leaflet(data = crimes) %>%
 
 # Custom Palette
 type.of.crime.colors <- colorFactor(
-  palette = c('red', 'pink', 'blue'),
-  levels = c('Gun', 'Knife', 'Others'))
+  palette = c('red', 'yellow', 'blue'),
+  levels = c('Day', 'Evening', 'Midnight'))
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.WorldStreetMap) %>%
@@ -67,10 +68,10 @@ leaflet(data = crimes) %>%
                    lng = ~LONGITUDE,
                    lat = ~LATITUDE,
                    radius = 2,
-                   color = ~type.of.crime.colors(METHOD)) %>%
+                   color = ~type.of.crime.colors(SHIFT)) %>%
   addLegend(position = 'topright',
             pal = type.of.crime.colors,
-            values = crimes$METHOD,
+            values = crimes$SHIFT,
             title = 'Weapon')
 ```
 
