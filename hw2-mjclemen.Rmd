@@ -18,33 +18,33 @@ require(leaflet.extras)
 require(dplyr)
 require(readxl)
 require(stringr)
+# Read in spatial data
+crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
+crimes <- crimes[1:200,]
 ```
 
 # Map with a layer of points
 
 ```{r}
-# Read in spatial data
-crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
-
-crimes.circle.map <- leaflet(data = crimes[1:100,]) %>%
+leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.WorldStreetMap) %>%
-  addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE)
+  addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE, radius = 2)
 ```
 # Map with a layer of lines
 ```{r}
-leaflet(data = crimes[1:100,]) %>%
+leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
-  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = crimes[1:100,"OFFENSE""])
+  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = crimes[1:100,'OFFENSE'])
 ```
 # Map with a layer of polygons
 ```{r}
-leaflet(data = crimes[1:100,]) %>%
+leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
               weight = 2,
               color = "purple",
               label = "Crimes throughout DC",
-              highlight = highlightOptions(weight = 10,
+              highlight = highlightOptions(weight = 3,
                                            color = "blue",
                                            bringToFront = TRUE))
 ```
@@ -52,19 +52,19 @@ leaflet(data = crimes[1:100,]) %>%
 ```{r}
 # Custom Palette
 type.of.crime.colors <- colorFactor(
-  palette = c('red', 'blue', 'green'),
+  palette = c('red', 'orange', 'blue'),
   levels = c('GUN', 'KNIFE', 'OTHERS'))
 
-leaflet(data = crimes[1:100,]) %>%
-  addProviderTiles(providers$OpenStreetMap) %>%
-  addCircleMarkers(data = crimes[1:100,],
+leaflet(data = crimes) %>%
+  addProviderTiles(providers$OpenStreetMap.BlackAndWhite) %>%
+  addCircleMarkers(data = crimes,
                    lng = ~LONGITUDE,
                    lat = ~LATITUDE,
                    radius = 2,
                    color = ~type.of.crime.colors(METHOD)) %>%
   addLegend(position = 'topright',
             pal = type.of.crime.colors,
-            values = crimes[1:100,]$METHOD,
-            title = "Weapon")
+            values = toTitleCase(crimes$METHOD),
+            title = 'Weapon')
 ```
 
