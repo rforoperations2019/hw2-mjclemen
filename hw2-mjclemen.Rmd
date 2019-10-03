@@ -23,19 +23,18 @@ require(stringr)
 # Map with a layer of points
 
 ```{r}
+# Read in spatial data
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 
 crimes.circle.map <- leaflet(data = crimes[1:100,]) %>%
   addProviderTiles(providers$Esri.WorldStreetMap) %>%
   addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE)
-crimes.circle.map  # Print the map
 ```
 # Map with a layer of lines
 ```{r}
-crimes.line.map <- leaflet(data = crimes[1:100,]) %>%
+leaflet(data = crimes[1:100,]) %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
-  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE)
-crimes.line.map  # Print the map
+  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = crimes[1:100,"OFFENSE""])
 ```
 # Map with a layer of polygons
 ```{r}
@@ -48,5 +47,9 @@ leaflet(data = crimes[1:100,]) %>%
               highlight = highlightOptions(weight = 10,
                                            color = "blue",
                                            bringToFront = TRUE))
+```
+# Map with a variable which changes of the color of the elements or the marker with an accompanying legend
+```{r}
+
 ```
 
