@@ -18,9 +18,11 @@ require(leaflet.extras)
 require(dplyr)
 require(readxl)
 require(stringr)
+require(tools)
 # Read in spatial data
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 crimes <- crimes[1:200,]
+crimes$METHOD <- str_to_title(crimes$METHOD)
 ```
 
 # Map with a layer of points
@@ -53,13 +55,14 @@ leaflet(data = crimes) %>%
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
 ```{r}
+
 # Custom Palette
 type.of.crime.colors <- colorFactor(
-  palette = c('red', 'orange', 'blue'),
-  levels = c('GUN', 'KNIFE', 'OTHERS'))
+  palette = c('red', 'pink', 'blue'),
+  levels = c('Gun', 'Knife', 'Others'))
 
 leaflet(data = crimes) %>%
-  addProviderTiles(providers$OpenStreetMap.BlackAndWhite) %>%
+  addProviderTiles(providers$Esri.WorldStreetMap) %>%
   addCircleMarkers(data = crimes,
                    lng = ~LONGITUDE,
                    lat = ~LATITUDE,
@@ -67,7 +70,7 @@ leaflet(data = crimes) %>%
                    color = ~type.of.crime.colors(METHOD)) %>%
   addLegend(position = 'topright',
             pal = type.of.crime.colors,
-            values = toTitleCase(crimes$METHOD),
+            values = crimes$METHOD,
             title = 'Weapon')
 ```
 
