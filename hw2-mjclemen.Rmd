@@ -23,11 +23,11 @@ require(stringr)
 # Map with a layer of points
 
 ```{r}
-cimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
+crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 
-crimes.circle.map <- leaflet() %>%
+crimes.circle.map <- leaflet(data = crimes[1:100,]) %>%
   addTiles() %>%
-  addCircleMarkers(lng = ~Longitude, lat = ~Latitude)
+  addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE)
 crimes.circle.map  # Print the map
 ```
 
