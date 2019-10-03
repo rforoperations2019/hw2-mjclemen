@@ -30,4 +30,11 @@ crimes.circle.map <- leaflet(data = crimes[1:100,]) %>%
   addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE)
 crimes.circle.map  # Print the map
 ```
+# Map with a layer of lines
+```{r}
+crimes.line.map <- leaflet(data = crimes[1:100,]) %>%
+  addTiles() %>%
+  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE)
+crimes.line.map  # Print the map
+```
 
