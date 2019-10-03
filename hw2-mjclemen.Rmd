@@ -33,8 +33,20 @@ crimes.circle.map  # Print the map
 # Map with a layer of lines
 ```{r}
 crimes.line.map <- leaflet(data = crimes[1:100,]) %>%
-  addTiles() %>%
+  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
   addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE)
 crimes.line.map  # Print the map
+```
+# Map with a layer of polygons
+```{r}
+leaflet(data = crimes[1:100,]) %>%
+  addProviderTiles(providers$Stamen.Toner) %>%
+  addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
+              weight = 2,
+              color = "purple",
+              label = "Crimes throughout DC",
+              highlight = highlightOptions(weight = 10,
+                                           color = "blue",
+                                           bringToFront = TRUE))
 ```
 
