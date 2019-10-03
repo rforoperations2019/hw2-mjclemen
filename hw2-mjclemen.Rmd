@@ -26,7 +26,7 @@ require(stringr)
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 
 crimes.circle.map <- leaflet(data = crimes[1:100,]) %>%
-  addTiles() %>%
+  addProviderTiles(providers$Esri.WorldStreetMap) %>%
   addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE)
 crimes.circle.map  # Print the map
 ```
