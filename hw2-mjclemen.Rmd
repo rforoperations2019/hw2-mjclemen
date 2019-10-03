@@ -34,7 +34,10 @@ leaflet(data = crimes) %>%
 ```{r}
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
-  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = crimes[1:100,'OFFENSE'])
+  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE,
+               color = "red",
+               group = crimes$OFFENSE,
+               weight = 2)
 ```
 # Map with a layer of polygons
 ```{r}
