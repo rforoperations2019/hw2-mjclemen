@@ -1,0 +1,33 @@
+---
+title: "hw2-mjclemen"
+author: "Mandy Clemente"
+date: "October 2, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+require(rgdal)
+require(leaflet)
+require(leaflet.extras)
+require(dplyr)
+require(readxl)
+require(stringr)
+```
+
+# Map with a layer of points
+
+```{r}
+cimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
+
+crimes.circle.map <- leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~Longitude, lat = ~Latitude)
+crimes.circle.map  # Print the map
+```
+
