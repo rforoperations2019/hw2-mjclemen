@@ -51,7 +51,7 @@ leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
               weight = 2,
-              color = "purple",
+              color = ~crime.method(crimes$METHOD),
               label = "Crimes throughout DC",
               highlight = highlightOptions(weight = 3,
                                            color = "blue",
