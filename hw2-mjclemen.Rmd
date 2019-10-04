@@ -46,13 +46,14 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of polygons
 ```{r}
-crime.district <- colorFactor(topo.colors(7), crimes$DISTRICT)
+crime.district <- colorFactor(topo.colors(5), crimes$DISTRICT)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
               color = ~crime.district(DISTRICT),
-              stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1) %>%
+              stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
+              popup = DISTRICT) %>%
   addLegend(pal = crime.district, values = ~DISTRICT, title = "Color by District:",
   position = "bottomright")
 ```
