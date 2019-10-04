@@ -24,6 +24,7 @@ crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 crimes <- crimes[1:200,]
 crimes$METHOD <- str_to_title(crimes$METHOD)
 crimes$SHIFT <- str_to_title(crimes$SHIFT)
+crimes$START_DATE <- as.Date(crimes$START_DATE)
 ```
 
 # Map with a layer of points
@@ -80,6 +81,19 @@ leaflet(data = crimes) %>%
 ```
 # Map with functioning layersControl()
 ```{r}
-
+leaflet(crimes) %>%
+  # Two different base groups
+  addProviderTiles(providers$Thunderforest, group = "Thunderforest") %>%
+  addProviderTiles(providers$OpenWeatherMap, group = "OpenWeatherMap") %>%
+  # Two different layers
+  addCircles(lng = ~LONGITUDE, lat = ~LATITUDE, radius = crimes$PSA, stroke = F, group = "PSA", popup = ~PSA) %>%
+  addCircles(data = crimes, lng = ~LONGITUDE, lat = ~LATITUDE,
+    fill = F, weight = 3, color = "red", group = "Circle Outline") %>%
+  # Layers control
+  addLayersControl(
+    baseGroups = c("Thunderforest", "OpenWeatherMap"),
+    overlayGroups = c("PSA", "Circle Outline"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
 ```
 
