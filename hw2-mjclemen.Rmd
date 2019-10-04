@@ -25,6 +25,7 @@ crimes <- crimes[1:200,]
 crimes$METHOD <- str_to_title(crimes$METHOD)
 crimes$SHIFT <- str_to_title(crimes$SHIFT)
 crimes$START_DATE <- as.Date(crimes$START_DATE)
+crimes$DISTRICT <- as.factor(crimes$DISTRICT)
 ```
 
 # Map with a layer of points
@@ -45,16 +46,14 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of polygons
 ```{r}
-crime.district <- colorFactor("Dark2", crimes$DISTRICT)
+crime.district <- colorFactor(topo.colors(7), crimes$DISTRICT)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
-              weight = 1,
-              color = "white",
-              fillColor = ~crime.district(crimes$DISTRICT),
-              label = "Crimes throughout DC") %>%
-  addLegend(pal = crime.district, values = ~crimes$DISTRICT, title = "Color by District:",
+              color = ~crime.district(DISTRICT),
+              stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1) %>%
+  addLegend(pal = crime.district, values = ~DISTRICT, title = "Color by District:",
   position = "bottomright")
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
