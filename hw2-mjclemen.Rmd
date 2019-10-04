@@ -45,18 +45,16 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of polygons
 ```{r}
-crime.offense <- colorFactor("Dark2", crimes$OFFENSE)
+crime.district <- colorFactor("Dark2", crimes$DISTRICT)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
-              weight = 2,
-              color = ~crime.offense(crimes$OFFENSE),
-              label = "Crimes throughout DC",
-              highlight = highlightOptions(weight = 3,
-                                           color = "blue",
-                                           bringToFront = TRUE)) %>%
-  addLegend(pal = crime.offense, values = ~crimes$OFFENSE, title = "Color by Offense:",
+              weight = 1,
+              color = "white",
+              fillColor = ~crime.district(crimes$DISTRICT),
+              label = "Crimes throughout DC") %>%
+  addLegend(pal = crime.district, values = ~crimes$DISTRICT, title = "Color by District:",
   position = "bottomright")
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
