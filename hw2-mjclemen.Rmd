@@ -44,7 +44,7 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of polygons
 ```{r}
-crime.method <- colorBin("Dark2", domain = crimes$METHOD)
+crime.method <- colorFactor("Dark2", crimes$METHOD)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
@@ -62,7 +62,7 @@ leaflet(data = crimes) %>%
 ```{r}
 
 # Custom Palette
-type.of.crime.colors <- colorFactor(
+time.of.day.colors <- colorFactor(
   palette = c('red', 'yellow', 'blue'),
   levels = c('Day', 'Evening', 'Midnight'))
 
@@ -72,9 +72,9 @@ leaflet(data = crimes) %>%
                    lng = ~LONGITUDE,
                    lat = ~LATITUDE,
                    radius = 2,
-                   color = ~type.of.crime.colors(SHIFT)) %>%
+                   color = ~time.of.day.colors(SHIFT)) %>%
   addLegend(position = 'topright',
-            pal = type.of.crime.colors,
+            pal = time.of.day.colors,
             values = crimes$SHIFT,
             title = 'Time of Day')
 ```
