@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## R Markdown - load the following libraries
 
 ```{r}
 require(rgdal)
@@ -19,6 +19,11 @@ require(dplyr)
 require(readxl)
 require(stringr)
 require(tools)
+```
+
+# Read in csv file, take first 500 records, and apply title caps to the columns that will be used in the maps
+
+```{r}
 # Read in spatial data
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 crimes <- crimes[1:500,]
@@ -31,19 +36,22 @@ crimes$DISTRICT <- as.factor(crimes$DISTRICT)
 # Map with a layer of points
 
 ```{r}
+# Creating colored icons for each shift during which a crime occurred
 icons <- awesomeIconList(
   Day = makeAwesomeIcon(icon = "certificate", library = "glyphicon", markerColor = "orange", iconColor = "black"),
   Evening = makeAwesomeIcon(icon = "bed", library = "glyphicon", markerColor = "blue", iconColor = "black"),
   Midnight = makeAwesomeIcon(icon = "cloud", library = "glyphicon", markerColor = "black", iconColor = "white")
 )
 
+# Use icons in map to show where the crimes occurred throughout the day and night
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.TonerHybrid) %>%
   addAwesomeMarkers(lng = ~LONGITUDE, lat = ~LATITUDE,  icon = ~icons[str_trim(SHIFT)], popup = ~SHIFT)
 ```
+
 # Map with a layer of lines
 ```{r}
-color.by.census <- colorBin(palette = "Dark2", domain = crimes$CENSUS_TRACT, bins = 7)
+color.by.census <- colorQuantile(palette = "Dark2", domain = crimes$CENSUS_TRACT, n = 7)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
@@ -53,8 +61,8 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of polygons
 ```{r}
-crime.district <- colorBin(palette = c("red", "blue", "purple", "black", "orange", "pink", "green"),
-                           domain = crimes$CENSUS_TRACT, bins = 7)
+crime.district <- colorQuantile(palette = c("red", "blue", "purple", "black", "orange", "pink", "green"),
+                           domain = crimes$CENSUS_TRACT, n = 7)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
