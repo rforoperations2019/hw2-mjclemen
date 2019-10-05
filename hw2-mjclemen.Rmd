@@ -54,15 +54,16 @@ leaflet(data = crimes) %>%
 
 # Map with a layer of lines
 ```{r}
-census.diversity.shp <- readOGR("census-diversity.shp", GDAL1_integer64_policy = TRUE)
-head(census.diversity.shp@data)
+cancer.rates <- readOGR("./Cancer_Rates/Cancer_Rates.shp", layer = "Cancer_Rates", GDAL1_integer64_policy = TRUE)
+head(cancer.rates@data)
 
 # Create color palette to apply to polygons
-color.palette <- colorNumeric("Blues", NULL)
+color.palette <- colorNumeric("YlGnBu", NULL)
 
-leaflet(data = census.diversity.shp) %>%
+leaflet(data = cancer.rates) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
-  addPolylines(color = "YlGnBu")
+  addPolylines(color = ~color.palette(cancer.rates$Breast_Can)) %>%
+  addLegend(position = "topright", pal = color.palette, values = cancer.rates$Breast_Can, title = "Breast Cancer Rates")
 ```
 # Map with a layer of polygons
 ```{r, geojson}
