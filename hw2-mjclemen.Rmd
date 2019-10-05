@@ -51,23 +51,31 @@ leaflet(data = crimes) %>%
 
 # Map with a layer of lines
 ```{r}
-color.by.census <- colorQuantile(palette = "Dark2", domain = crimes$CENSUS_TRACT, n = 7)
+color.by.ccn <- colorQuantile(palette = "YlGnBu", domain = crimes$CCN)
 
 leaflet(data = crimes) %>%
-  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
+  addTiles() %>%
   addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE,
-               color = ~color.by.census(CENSUS_TRACT),
-               weight = 2)
+               color = ~color.by.ccn(CCN),
+               weight = 2) %>%
+  addLegend(pal = color.by.ccn, values = ~CCN, title = "Color by Criminal Complaint Number:",
+  position = "bottomright")
+
+# polyline.map <-  leaflet(x)
+# polyline.map <- addTiles(map)
+# for(OFFENSE in levels(as.factor(crimes$OFFENSE))){
+#   polyline.map <- addPolylines(map, lng=~LONGITUDE,lat=~LATITUDE,data=crimes[crimes$OFFENSE == OFFENSE,], color= ~Color)
+# }
+# polyline.map
 ```
 # Map with a layer of polygons
 ```{r}
-crime.district <- colorQuantile(palette = c("red", "blue", "purple", "black", "orange", "pink", "green"),
-                           domain = crimes$CENSUS_TRACT, n = 7)
+crime.district <- colorNumeric(palette = c("Blues"), domain = crimes$CENSUS_TRACT)
 
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
-              fillColor = ~crime.district(CENSUS_TRACT),
+              color = ~crime.district(CENSUS_TRACT),
               stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
               popup = crimes$CENSUS_TRACT) %>%
   addLegend(pal = crime.district, values = ~CENSUS_TRACT, title = "Color by District:",
