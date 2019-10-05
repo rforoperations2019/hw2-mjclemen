@@ -34,7 +34,7 @@ crimes
 ```{r}
 icons <- awesomeIconList(
   Day = makeAwesomeIcon(icon = "sun", library = "fa", markerColor = "orange"),
-  Evening = makeAwesomeIcon(icon = "cloudm-moon", library = "fa", markerColor = "blue"),
+  Evening = makeAwesomeIcon(icon = "cloud-moon", library = "fa", markerColor = "purple"),
   Midnight = makeAwesomeIcon(icon = "moon", library = "fa", markerColor = "black")
 )
 
