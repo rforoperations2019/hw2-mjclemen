@@ -21,19 +21,26 @@ require(stringr)
 require(tools)
 # Read in spatial data
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
-crimes <- crimes[1:200,]
+crimes <- crimes[1:500,]
 crimes$METHOD <- str_to_title(crimes$METHOD)
 crimes$SHIFT <- str_to_title(crimes$SHIFT)
 crimes$START_DATE <- as.Date(crimes$START_DATE)
 crimes$DISTRICT <- as.factor(crimes$DISTRICT)
+crimes
 ```
 
 # Map with a layer of points
 
 ```{r}
+icons <- awesomeIconList(
+  Day = makeAwesomeIcon(icon = "sun", library = "fa", markerColor = "orange"),
+  Evening = makeAwesomeIcon(icon = "cloudm-moon", library = "fa", markerColor = "blue"),
+  Midnight = makeAwesomeIcon(icon = "moon", library = "fa", markerColor = "black")
+)
+
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.WorldStreetMap) %>%
-  addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE, radius = 2)
+  addAwesomeMarkers(lng = ~LONGITUDE, lat = ~LATITUDE,  icon = ~icons[str_trim(SHIFT)], popup = ~SHIFT)
 ```
 # Map with a layer of lines
 ```{r}
@@ -53,7 +60,7 @@ leaflet(data = crimes) %>%
   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
               color = ~crime.district(DISTRICT),
               stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
-              popup = DISTRICT) %>%
+              popup = crimes$DISTRICT) %>%
   addLegend(pal = crime.district, values = ~DISTRICT, title = "Color by District:",
   position = "bottomright")
 ```
