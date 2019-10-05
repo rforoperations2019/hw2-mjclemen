@@ -21,22 +21,26 @@ require(stringr)
 require(tools)
 ```
 
-# Read in csv file, take first 500 records, and apply title caps to the columns that will be used in the maps
+# Read in files
 
 ```{r, geojson}
-# Read in spatial data
+# Read in spatial csv file for crime data
+# Read in csv file, take first 500 records, and apply title caps to the columns that will be used in the maps
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
-crimes.shortened <- crimes[1:500,]
+crimes <- crimes[1:300,]
 crimes$METHOD <- str_to_title(crimes$METHOD)
 crimes$SHIFT <- str_to_title(crimes$SHIFT)
 crimes$START_DATE <- as.Date(crimes$START_DATE)
 crimes$DISTRICT <- as.factor(crimes$DISTRICT)
 
-# Read in geojson file
+# Read in geojson file for diversity data
 census.diversity <- readOGR("census-diversity.geojson")
+
+# Read in shp file for cancer data
+cancer.rates <- readOGR("./Cancer_Rates/Cancer_Rates.shp", layer = "Cancer_Rates", GDAL1_integer64_policy = TRUE)
 ```
 
-# Map with a layer of points
+# Map with a layer of points using crime data
 
 ```{r}
 # Creating colored icons for each shift during which a crime occurred
@@ -52,20 +56,17 @@ leaflet(data = crimes) %>%
   addAwesomeMarkers(lng = ~LONGITUDE, lat = ~LATITUDE,  icon = ~icons[str_trim(SHIFT)], popup = ~SHIFT)
 ```
 
-# Map with a layer of lines
+# Map with a layer of lines using Cancer data
 ```{r}
-cancer.rates <- readOGR("./Cancer_Rates/Cancer_Rates.shp", layer = "Cancer_Rates", GDAL1_integer64_policy = TRUE)
-head(cancer.rates@data)
-
 # Create color palette to apply to polygons
 color.palette <- colorNumeric("YlGnBu", NULL)
 
 leaflet(data = cancer.rates) %>%
-  addProviderTiles(providers$Stamen.Toner) %>%
+  addProviderTiles(providers$Stamen.TonerLite) %>%
   addPolylines(color = ~color.palette(cancer.rates$Breast_Can)) %>%
-  addLegend(position = "topright", pal = color.palette, values = cancer.rates$Breast_Can, title = "Breast Cancer Rates")
+  addLegend(position = "topright", pal = color.palette, values = cancer.rates$Breast_Can, title = "Breast Cancer Population")
 ```
-# Map with a layer of polygons
+# Map with a layer of polygons using census data
 ```{r, geojson}
 
 # Create color palette to apply to polygons
@@ -80,7 +81,7 @@ leaflet(census.diversity) %>%
   addLegend(position = "topright", pal = color.palette2, values = ~totpop10, opacity = 1.0,
             title = "Total Population in Region")
 ```
-# Map with a variable which changes of the color of the elements or the marker with an accompanying legend
+# Map with a variable, time of the crime, that changes the color of the circles. Using crime data
 ```{r}
 
 # Custom Palette
@@ -98,22 +99,24 @@ leaflet(data = crimes) %>%
   addLegend(position = 'topright',
             pal = time.of.day.colors,
             values = crimes$SHIFT,
-            title = 'Time of Day')
+            title = 'Time of Day of Crime')
 ```
-# Map with functioning layersControl()
+# Map with functioning layersControl() using Crime data
 ```{r}
+crimes.method <- crimes[(crimes$METHOD) == "Gun",]
+
 leaflet(crimes) %>%
   # Two different base groups
-  addProviderTiles(providers$OpenStreetMap, group = "Open Street") %>%
+  addProviderTiles(providers$Esri.NatGeoWorldMap, group = "Esri Geo World") %>%
   addProviderTiles(providers$Stamen, group = "Stamen") %>%
   # Two different layers
-  addCircles(lng = ~LONGITUDE, lat = ~LATITUDE, radius = crimes$PSA, stroke = F, group = "PSA", popup = ~PSA) %>%
-  addCircles(data = crimes, lng = ~LONGITUDE, lat = ~LATITUDE,
-    fill = F, weight = 3, color = "red", group = "Circle Outline") %>%
+  addCircles(lng = ~LONGITUDE, lat = ~LATITUDE, radius = crimes$PSA, stroke = F, group = "PSA") %>%
+  addCircles(data = crimes.method, lng = ~LONGITUDE, lat = ~LATITUDE,
+             weight = 6, color = "red", group = "Gun crimes") %>%
   # Layers control
   addLayersControl(
-    baseGroups = c("Open Street", "Stamen"),
-    overlayGroups = c("PSA", "Circle Outline"),
+    baseGroups = c("Esri Geo World", "Stamen"),
+    overlayGroups = c("PSA assignment", "Gun crimes"),
     options = layersControlOptions(collapsed = FALSE)
   )
 ```
