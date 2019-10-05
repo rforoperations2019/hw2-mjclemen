@@ -23,7 +23,7 @@ require(tools)
 
 # Read in csv file, take first 500 records, and apply title caps to the columns that will be used in the maps
 
-```{r}
+```{r, geojson}
 # Read in spatial data
 crimes <- read.csv("Crime_Incidents_in_the_Last_30_Days.csv")
 crimes.shortened <- crimes[1:500,]
@@ -31,6 +31,9 @@ crimes$METHOD <- str_to_title(crimes$METHOD)
 crimes$SHIFT <- str_to_title(crimes$SHIFT)
 crimes$START_DATE <- as.Date(crimes$START_DATE)
 crimes$DISTRICT <- as.factor(crimes$DISTRICT)
+
+# Read in geojson file
+census.diversity <- readOGR("census-diversity.geojson")
 ```
 
 # Map with a layer of points
@@ -51,43 +54,29 @@ leaflet(data = crimes) %>%
 
 # Map with a layer of lines
 ```{r}
-new.crimes <- crimes[order(crimes$START_DATE),]
+census.diversity.shp <- readOGR("census-diversity.shp", GDAL1_integer64_policy = TRUE)
+head(census.diversity.shp@data)
 
-one.data <- new.crimes[(new.crimes$WARD == 1),]
-two.data <- new.crimes[(new.crimes$WARD == 2),]
-three.data <- new.crimes[(new.crimes$WARD == 3),]
-four.data <- new.crimes[(new.crimes$WARD == 4),]
-five.data <- new.crimes[(new.crimes$WARD == 5),]
-six.data <- new.crimes[(new.crimes$WARD == 6),]
-seven.data <- new.crimes[(new.crimes$WARD == 7),]
-eight.data <- new.crimes[(new.crimes$WARD == 8),]
+# Create color palette to apply to polygons
+color.palette <- colorNumeric("Blues", NULL)
 
-leaflet() %>%
+leaflet(data = census.diversity.shp) %>%
   addProviderTiles(providers$Stamen.Toner) %>%
-  addPolylines(data = one.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = ) %>%
-  addPolylines(data = two.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "blue", group = ) %>%
-  addPolylines(data = three.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "green", group = ) %>%
-  addPolylines(data = four.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "purple", group = ) %>%
-  addPolylines(data = five.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "pink", group = ) %>%
-  addPolylines(data = six.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "orange", group = ) %>%
-  addPolylines(data = seven.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "black", group = ) %>%
-  addPolylines(data = eight.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "turquoise2", group = )
+  addPolylines(color = "YlGnBu")
 ```
 # Map with a layer of polygons
 ```{r, geojson}
-# Read in geojson file
-census.diversity <- readOGR("census-diversity.geojson")
 
 # Create color palette to apply to polygons
-color.palette <- colorNumeric("Purples", NULL)
+color.palette2 <- colorNumeric("Purples", NULL)
 
 # Create map to show the population in different regions and then the hispanic population compared to total
 leaflet(census.diversity) %>%
   addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
   addPolygons(stroke = FALSE, smoothFactor = 0.3, fillOpacity = 1,
-    fillColor = ~color.palette(totpop10),
+    fillColor = ~color.palette2(totpop10),
     popup = paste("Hispanic Population: ", census.diversity$hisppop_cy)) %>%
-  addLegend(position = "topright", pal = color.palette, values = ~totpop10, opacity = 1.0,
+  addLegend(position = "topright", pal = color.palette2, values = ~totpop10, opacity = 1.0,
             title = "Total Population in Region")
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
