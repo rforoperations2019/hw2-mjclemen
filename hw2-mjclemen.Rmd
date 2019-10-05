@@ -39,7 +39,7 @@ icons <- awesomeIconList(
 )
 
 leaflet(data = crimes) %>%
-  addProviderTiles(providers$Esri.WorldStreetMap) %>%
+  addProviderTiles(providers$Stamen.TonerHybrid) %>%
   addAwesomeMarkers(lng = ~LONGITUDE, lat = ~LATITUDE,  icon = ~icons[str_trim(SHIFT)], popup = ~SHIFT)
 ```
 # Map with a layer of lines
