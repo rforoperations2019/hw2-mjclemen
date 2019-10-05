@@ -110,7 +110,7 @@ leaflet(crimes) %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap, group = "Esri Geo World") %>%
   addProviderTiles(providers$Stamen, group = "Stamen") %>%
   # Two different layers
-  addCircles(lng = ~LONGITUDE, lat = ~LATITUDE, radius = crimes$PSA, stroke = F, group = "PSA") %>%
+  addCircles(lng = ~LONGITUDE, lat = ~LATITUDE, radius = crimes$PSA, stroke = F, group = "PSA assignment") %>%
   addCircles(data = crimes.method, lng = ~LONGITUDE, lat = ~LATITUDE,
              weight = 6, color = "red", group = "Gun crimes") %>%
   # Layers control
