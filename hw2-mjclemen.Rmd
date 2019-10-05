@@ -33,9 +33,9 @@ crimes
 
 ```{r}
 icons <- awesomeIconList(
-  Day = makeAwesomeIcon(icon = "sun", library = "fa", markerColor = "orange"),
-  Evening = makeAwesomeIcon(icon = "cloud-moon", library = "fa", markerColor = "purple"),
-  Midnight = makeAwesomeIcon(icon = "moon", library = "fa", markerColor = "black")
+  Day = makeAwesomeIcon(icon = "certificate", library = "glyphicon", markerColor = "orange", iconColor = "black"),
+  Evening = makeAwesomeIcon(icon = "bed", library = "glyphicon", markerColor = "blue", iconColor = "black"),
+  Midnight = makeAwesomeIcon(icon = "cloud", library = "glyphicon", markerColor = "black", iconColor = "white")
 )
 
 leaflet(data = crimes) %>%
@@ -44,11 +44,12 @@ leaflet(data = crimes) %>%
 ```
 # Map with a layer of lines
 ```{r}
+color.by.offense <- colorFactor("Dark2", levels = crimes$OFFENSE)
+
 leaflet(data = crimes) %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
   addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE,
-               color = "red",
-               group = crimes$OFFENSE,
+               color = ~color.by.offense(OFFENSE),
                weight = 2)
 ```
 # Map with a layer of polygons
