@@ -51,35 +51,60 @@ leaflet(data = crimes) %>%
 
 # Map with a layer of lines
 ```{r}
-color.by.ccn <- colorQuantile(palette = "YlGnBu", domain = crimes$CCN)
+new.crimes <- crimes[order(crimes$LONGITUDE),]
 
-leaflet(data = crimes) %>%
-  addTiles() %>%
-  addPolylines(lng = ~LONGITUDE, lat = ~LATITUDE,
-               color = ~color.by.ccn(CCN),
-               weight = 2) %>%
-  addLegend(pal = color.by.ccn, values = ~CCN, title = "Color by Criminal Complaint Number:",
-  position = "bottomright")
+one.data <- new.crimes[(new.crimes$WARD == 1),]
+two.data <- new.crimes[(new.crimes$WARD == 2),]
+three.data <- new.crimes[(new.crimes$WARD == 3),]
+four.data <- new.crimes[(new.crimes$WARD == 4),]
+five.data <- new.crimes[(new.crimes$WARD == 5),]
+six.data <- new.crimes[(new.crimes$WARD == 6),]
+seven.data <- new.crimes[(new.crimes$WARD == 7),]
+eight.data <- new.crimes[(new.crimes$WARD == 8),]
 
-# polyline.map <-  leaflet(x)
-# polyline.map <- addTiles(map)
-# for(OFFENSE in levels(as.factor(crimes$OFFENSE))){
-#   polyline.map <- addPolylines(map, lng=~LONGITUDE,lat=~LATITUDE,data=crimes[crimes$OFFENSE == OFFENSE,], color= ~Color)
-# }
-# polyline.map
+leaflet() %>%
+  addProviderTiles(providers$Stamen.Toner) %>%
+  addPolylines(data = one.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = ) %>%
+  addPolylines(data = two.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "blue", group = ) %>%
+  addPolylines(data = three.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "green", group = ) %>%
+  addPolylines(data = four.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "purple", group = ) %>%
+  addPolylines(data = five.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "pink", group = ) %>%
+  addPolylines(data = six.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "orange", group = ) %>%
+  addPolylines(data = seven.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "black", group = ) %>%
+  addPolylines(data = eight.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "turquoise2", group = )
 ```
 # Map with a layer of polygons
 ```{r}
-crime.district <- colorNumeric(palette = c("Blues"), domain = crimes$CENSUS_TRACT)
+# crime.district <- colorFactor(palette = c("Blues"), domain = crimes$WARD)
+# 
+# leaflet(data = crimes) %>%
+#   addProviderTiles(providers$Stamen.Toner) %>%
+#   addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
+#               color = ~crime.district(CENSUS_TRACT),
+#               stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
+#               popup = crimes$CENSUS_TRACT) %>%
+#   addLegend(pal = crime.district, values = ~CENSUS_TRACT, title = "Color by District:",
+#   position = "bottomright")
 
-leaflet(data = crimes) %>%
+one.data <- crimes[(crimes$WARD == 1),]
+two.data <- crimes[(crimes$WARD == 2),]
+three.data <- crimes[(crimes$WARD == 3),]
+four.data <- crimes[(crimes$WARD == 4),]
+five.data <- crimes[(crimes$WARD == 5),]
+six.data <- crimes[(crimes$WARD == 6),]
+seven.data <- crimes[(crimes$WARD == 7),]
+eight.data <- crimes[(crimes$WARD == 8),]
+
+leaflet() %>%
   addProviderTiles(providers$Stamen.Toner) %>%
-  addPolygons(lng = ~LONGITUDE, lat = ~LATITUDE,
-              color = ~crime.district(CENSUS_TRACT),
-              stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
-              popup = crimes$CENSUS_TRACT) %>%
-  addLegend(pal = crime.district, values = ~CENSUS_TRACT, title = "Color by District:",
-  position = "bottomright")
+  addPolygons(data = one.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "red", group = ) %>%
+  addPolygons(data = two.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "blue", group = ) %>%
+  addPolygons(data = three.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "green", group = ) %>%
+  addPolygons(data = four.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "purple", group = ) %>%
+  addPolygons(data = five.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "pink", group = ) %>%
+  addPolygons(data = six.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "orange", group = ) %>%
+  addPolygons(data = seven.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "black", group = ) %>%
+  addPolygons(data = eight.data, lng = ~LONGITUDE, lat = ~LATITUDE, color = "turquoise2", group = )
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
 ```{r}
