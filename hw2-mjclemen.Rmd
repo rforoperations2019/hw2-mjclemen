@@ -85,9 +85,10 @@ color.palette <- colorNumeric("Purples", NULL)
 leaflet(census.diversity) %>%
   addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
   addPolygons(stroke = FALSE, smoothFactor = 0.3, fillOpacity = 1,
-    fillColor = ~color.palette(log10(totpop10)),
+    fillColor = ~color.palette(totpop10),
     popup = paste("Hispanic Population: ", census.diversity$hisppop_cy)) %>%
-  addLegend(position = "topright", pal = color.palette, values = ~totpop10, title = "Total Population in Region")
+  addLegend(position = "topright", pal = color.palette, values = ~totpop10, opacity = 1.0,
+            title = "Total Population in Region")
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
 ```{r}
