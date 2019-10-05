@@ -75,15 +75,19 @@ leaflet() %>%
 ```
 # Map with a layer of polygons
 ```{r, geojson}
+# Read in geojson file
 census.diversity <- readOGR("census-diversity.geojson")
-head(census.diversity@data)
 
+# Create color palette to apply to polygons
 color.palette <- colorNumeric("Purples", NULL)
 
+# Create map to show the population in different regions and then the hispanic population compared to total
 leaflet(census.diversity) %>%
-  addProviderTiles("Esri.WorldGrayCanvas") %>%
+  addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
   addPolygons(stroke = FALSE, smoothFactor = 0.3, fillOpacity = 1,
-    fillColor = ~color.palette(log10(totpop10)))
+    fillColor = ~color.palette(log10(totpop10)),
+    popup = paste("Hispanic Population: ", census.diversity$hisppop_cy)) %>%
+  addLegend(position = "topright", pal = color.palette, values = ~totpop10, title = "Total Population in Region")
 ```
 # Map with a variable which changes of the color of the elements or the marker with an accompanying legend
 ```{r}
